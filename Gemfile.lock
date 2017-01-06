@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    github-watching (0.0.1)
+    github-watching (0.0.2)
       json
 
 GEM
@@ -18,3 +18,6 @@ DEPENDENCIES
   bump
   github-watching!
   rake
+
+BUNDLED WITH
+   1.13.6
