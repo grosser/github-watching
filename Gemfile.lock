@@ -18,6 +18,3 @@ DEPENDENCIES
   bump
   github-watching!
   rake
-
-BUNDLED WITH
-   1.13.6

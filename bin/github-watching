@@ -50,9 +50,12 @@ usage if ARGV.size != 0
 
 case command
 when 'unwatched'
-  subs = all("/users/#{username}/subscriptions").map { |s| s['full_name'] }
-  repos = all("/users/#{username}/repos").map { |r| r['full_name'] }
-  unwatched = repos - subs
+  subs = all("/users/#{username}/subscriptions")
+  repos = all("/users/#{username}/repos")
+
+  repos.reject! { |r| r['fork'] }
+  unwatched = repos.map { |s| s['full_name'] } - subs.map { |r| r['full_name'] }
+
   $stderr.puts "#{unwatched.size} unwatched repos"
   puts unwatched
 else
