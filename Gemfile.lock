@@ -1,0 +1,20 @@
+PATH
+  remote: .
+  specs:
+    github-watching (0.0.0)
+      json
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    bump (0.5.3)
+    json (2.0.2)
+    rake (11.3.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bump
+  github-watching!
+  rake

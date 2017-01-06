@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+require 'cgi'
+require 'json'
+
+def usage
+  puts <<-TEXT.gsub(/^    /, "")
+    Setup
+    -----
+    # create a new token at https://github.com/settings/tokens/new with repo access
+    git config github.token NEW_TOKEN --local
+
+    Usage
+    -----
+    #{$0} unwatched username # list your unwatched repos
+  TEXT
+  exit 1
+end
+
+def all(path)
+  per_page = 100
+  page = 1
+  all = []
+
+  loop do
+    response = page(path, page, per_page)
+    $stderr.puts "Loading #{path} page #{page}"
+    all.concat response
+    break if response.size < per_page
+    page += 1
+  end
+
+  all
+end
+
+def page(path, page, per_page)
+  github_token = `git config github.token`.strip
+  usage if github_token.empty?
+
+  url = "https://api.github.com#{path}?per_page=#{per_page}&page=#{page}"
+  command = "curl --silent --fail -H 'Authorization: token #{github_token}' -H 'Accept: application/vnd.github.v3.text-match+json' '#{url}'"
+  response = `#{command}`
+  raise "ERROR Request failed, reply was: #{response.inspect}" unless $?.success?
+
+  JSON.load(response)
+end
+
+command = ARGV.shift
+username = ARGV.shift
+usage if ARGV.size != 0
+
+case command
+when 'unwatched'
+  subs = all("/users/#{username}/subscriptions").map { |s| s['full_name'] }
+  repos = all("/users/#{username}/repos").map { |r| r['full_name'] }
+  unwatched = repos - subs
+  $stderr.puts "#{unwatched.size} unwatched repos"
+  puts unwatched
+else
+  usage
+end
