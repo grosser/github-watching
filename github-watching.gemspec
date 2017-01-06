@@ -1,6 +1,6 @@
 name = "github-watching"
 
-Gem::Specification.new name, '0.0.0' do |s|
+Gem::Specification.new name, '0.0.1' do |s|
   s.summary = "Watching manager"
   s.authors = ["Michael Grosser"]
   s.email = "michael@grosser.it"
